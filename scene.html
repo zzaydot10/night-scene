@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night Scene</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; height: 100vh; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const fireflies = [];
+    for (let i = 0; i < 80; i++) {
+      fireflies.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.02 + 0.01
+      });
+    }
+
+    function drawMoon() {
+      const mx = W * 0.78, my = H * 0.18, mr = 60;
+      ctx.beginPath();
+      ctx.arc(mx, my, mr, 0, Math.PI * 2);
+      ctx.fillStyle = '#fffbe6';
+      ctx.shadowColor = '#fffbe6';
+      ctx.shadowBlur = 40;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(mx + 18, my - 8, mr * 0.85, 0, Math.PI * 2);
+      ctx.fillStyle = '#000';
+      ctx.fill();
+    }
+
+    function drawFlower(x, y, size, color) {
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.ellipse(x + Math.cos(a) * size * 0.5, y + Math.sin(a) * size * 0.5, size * 0.4, size * 0.25, a, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.arc(x, y, size * 0.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffeb3b';
+      ctx.fill();
+    }
+
+    function drawStem(x, y, h) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x - 8, y - h * 0.5, x + 5, y - h);
+      ctx.strokeStyle = '#2e7d32';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    function drawTeddy(cx, cy, scale) {
+      const s = scale;
+      ctx.fillStyle = '#d7ccc8';
+      ctx.shadowColor = 'rgba(255,255,255,0.15)';
+      ctx.shadowBlur = 15;
+
+      ctx.beginPath(); ctx.arc(cx - 18 * s, cy - 55 * s, 14 * s, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + 18 * s, cy - 55 * s, 14 * s, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - 18 * s, cy - 55 * s, 8 * s, 0, Math.PI * 2); ctx.fillStyle = '#bcaaa4'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + 18 * s, cy - 55 * s, 8 * s, 0, Math.PI * 2); ctx.fill();
+
+      ctx.beginPath(); ctx.arc(cx, cy - 40 * s, 30 * s, 0, Math.PI * 2); ctx.fillStyle = '#d7ccc8'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy - 30 * s, 12 * s, 0, Math.PI * 2); ctx.fillStyle = '#efebe9'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy - 32 * s, 4 * s, 0, Math.PI * 2); ctx.fillStyle = '#4e342e'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - 8 * s, cy - 42 * s, 2.5 * s, 0, Math.PI * 2); ctx.fillStyle = '#4e342e'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + 8 * s, cy - 42 * s, 2.5 * s, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy - 38 * s, 5 * s, 0, Math.PI, false); ctx.strokeStyle = '#4e342e'; ctx.lineWidth = 1.5; ctx.stroke();
+
+      ctx.fillStyle = '#d7ccc8';
+      ctx.beginPath(); ctx.ellipse(cx, cy + 20 * s, 22 * s, 26 * s, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx, cy + 18 * s, 14 * s, 14 * s, 0, 0, Math.PI * 2); ctx.fillStyle = '#efebe9'; ctx.fill();
+
+      ctx.beginPath(); ctx.ellipse(cx - 32 * s, cy + 5 * s, 10 * s, 18 * s, -0.3, 0, Math.PI * 2); ctx.fillStyle = '#d7ccc8'; ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx + 32 * s, cy + 5 * s, 10 * s, 18 * s, 0.3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx - 28 * s, cy + 40 * s, 12 * s, 9 * s, -0.1, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(cx + 28 * s, cy + 40 * s, 12 * s, 9 * s, 0.1, 0, Math.PI * 2); ctx.fill();
+
+      ctx.beginPath(); ctx.arc(cx, cy - 36 * s, 30 * s, -2.2, -0.9, false);
+      ctx.strokeStyle = '#e8d5c4'; ctx.lineWidth = 4 * s; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy - 36 * s, 30 * s, -2.2, -0.9, true); ctx.stroke();
+    }
+
+    function drawStars() {
+      for (let i = 0; i < 120; i++) {
+        const sx = (Math.sin(i * 127.1 + i) * 0.5 + 0.5) * W;
+        const sy = (Math.sin(i * 311.7 + i) * 0.5 + 0.5) * H * 0.6;
+        const sr = Math.random() < 0.1 ? 2 : 1;
+        ctx.beginPath();
+        ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${0.3 + Math.random() * 0.7})`;
+        ctx.fill();
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, '#0a0a2e');
+      grad.addColorStop(1, '#000');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      drawStars();
+      drawMoon();
+
+      const ground = H * 0.82;
+      ctx.fillStyle = '#0d1a0d';
+      ctx.fillRect(0, ground, W, H - ground);
+
+      const flowerData = [
+        { x: 0.08, y: 0.88 }, { x: 0.15, y: 0.9 }, { x: 0.22, y: 0.87 },
+        { x: 0.30, y: 0.91 }, { x: 0.38, y: 0.89 }, { x: 0.50, y: 0.92 },
+        { x: 0.60, y: 0.88 }, { x: 0.68, y: 0.91 }, { x: 0.75, y: 0.87 },
+        { x: 0.85, y: 0.9 }, { x: 0.92, y: 0.89 }
+      ];
+      const colors = ['#e91e63', '#ff5722', '#9c27b0', '#ff9800', '#f44336', '#e040fb', '#ff6ec7'];
+      flowerData.forEach((f, i) => {
+        const fx = W * f.x, fy = H * f.y;
+        drawStem(fx, fy, 50 + (i % 3) * 10);
+        drawFlower(fx, fy - 50 - (i % 3) * 10, 12 + (i % 3) * 3, colors[i % colors.length]);
+      });
+
+      drawTeddy(W * 0.45, H * 0.72, 1.1);
+
+      fireflies.forEach(f => {
+        f.x += f.dx + Math.sin(f.phase) * 0.3;
+        f.y += f.dy + Math.cos(f.phase * 1.3) * 0.2;
+        f.phase += f.speed;
+        if (f.x < 0) f.x = W; if (f.x > W) f.x = 0;
+        if (f.y < 0) f.y = H; if (f.y > H) f.y = 0;
+        const glow = 0.4 + Math.sin(f.phase * 3) * 0.4;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r + 2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,150,${glow * 0.3})`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,100,${glow})`;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>
