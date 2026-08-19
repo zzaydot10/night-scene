@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night Scene - Pure CSS + Click</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      cursor: crosshair;
+    }
+
+    .sky {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #0a0a3e 0%, #1a0a4e 40%, #000 80%);
+    }
+
+    /* Stars */
+    .stars { position: absolute; inset: 0; }
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle 2s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.4); }
+    }
+
+    /* Moon */
+    .moon {
+      position: absolute;
+      top: 10%;
+      right: 16%;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: #fffde7;
+      box-shadow: 0 0 40px 15px rgba(255,253,200,0.4), 0 0 80px 30px rgba(255,253,200,0.2);
+      animation: moonGlow 4s ease-in-out infinite alternate;
+    }
+    .moon::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 28px;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: #0a0a3e;
+    }
+    @keyframes moonGlow {
+      0% { box-shadow: 0 0 40px 15px rgba(255,253,200,0.4), 0 0 80px 30px rgba(255,253,200,0.2); }
+      100% { box-shadow: 0 0 60px 25px rgba(255,253,200,0.6), 0 0 100px 40px rgba(255,253,200,0.3); }
+    }
+
+    /* Ground */
+    .ground {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 22%;
+      background: linear-gradient(180deg, #0d2a0d 0%, #061206 100%);
+    }
+
+    /* Flowers */
+    .flowers { position: absolute; bottom: 22%; width: 100%; }
+    .flower {
+      position: absolute;
+      bottom: 0;
+    }
+    .flower .stem {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      border-radius: 2px;
+      background: #2e7d32;
+      animation: sway 3s ease-in-out infinite;
+    }
+    .flower .bloom {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bloomPop 2s ease-in-out infinite alternate;
+    }
+    .flower .petal {
+      position: absolute;
+      border-radius: 50%;
+    }
+    .flower .center {
+      position: absolute;
+      background: #ffeb3b;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    @keyframes sway {
+      0%, 100% { transform: translateX(-50%) rotate(-4deg); }
+      50% { transform: translateX(-50%) rotate(4deg); }
+    }
+    @keyframes bloomPop {
+      0% { transform: translateX(-50%) scale(0.9); }
+      100% { transform: translateX(-50%) scale(1.15); }
+    }
+
+    /* Cat */
+    .cat {
+      position: absolute;
+      bottom: 22%;
+      left: 42%;
+      animation: catBounce 4s ease-in-out infinite;
+    }
+    .cat .head {
+      position: absolute;
+      bottom: 105px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 75px;
+      height: 65px;
+      background: #f8bbd0;
+      border-radius: 50% 50% 45% 45%;
+      box-shadow: 0 0 20px rgba(244,143,177,0.3);
+    }
+    .cat .ear-l, .cat .ear-r {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-bottom: 28px solid #f8bbd0;
+      top: -22px;
+    }
+    .cat .ear-l { left: 0px; transform: rotate(-10deg); }
+    .cat .ear-r { right: 0px; transform: rotate(10deg); }
+    .cat .ear-l::after, .cat .ear-r::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 18px solid #f48fb1;
+      top: 8px;
+      left: -8px;
+    }
+    .cat .eye-l, .cat .eye-r {
+      position: absolute;
+      width: 10px;
+      height: 12px;
+      background: #880e4f;
+      border-radius: 50%;
+      top: 22px;
+    }
+    .cat .eye-l { left: 14px; }
+    .cat .eye-r { right: 14px; }
+    .cat .eye-l::after, .cat .eye-r::after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #fff;
+      border-radius: 50%;
+      top: 2px;
+      left: 3px;
+    }
+    .cat .nose {
+      position: absolute;
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 6px;
+      background: #880e4f;
+      border-radius: 50% 50% 40% 40%;
+    }
+    .cat .mouth {
+      position: absolute;
+      top: 41px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 10px;
+    }
+    .cat .mouth::before, .cat .mouth::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 10px;
+      height: 8px;
+      border-bottom: 2px solid #880e4f;
+      border-radius: 0 0 50% 50%;
+    }
+    .cat .mouth::before { left: 0; }
+    .cat .mouth::after { right: 0; }
+    .cat .whisker-l1, .cat .whisker-l2, .cat .whisker-l3,
+    .cat .whisker-r1, .cat .whisker-r2, .cat .whisker-r3 {
+      position: absolute;
+      width: 30px;
+      height: 2px;
+      background: #880e4f;
+      top: 38px;
+      border-radius: 1px;
+    }
+    .cat .whisker-l1 { left: -28px; transform: rotate(-5deg); }
+    .cat .whisker-l2 { left: -30px; top: 42px; transform: rotate(0deg); }
+    .cat .whisker-l3 { left: -28px; top: 46px; transform: rotate(5deg); }
+    .cat .whisker-r1 { right: -28px; transform: rotate(5deg); }
+    .cat .whisker-r2 { right: -30px; top: 42px; transform: rotate(0deg); }
+    .cat .whisker-r3 { right: -28px; top: 46px; transform: rotate(-5deg); }
+    .cat .body {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 65px;
+      height: 75px;
+      background: #f8bbd0;
+      border-radius: 50% 50% 45% 45%;
+      box-shadow: 0 0 20px rgba(244,143,177,0.3);
+    }
+    .cat .belly {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38px;
+      height: 38px;
+      background: #fce4ec;
+      border-radius: 50%;
+    }
+    .cat .arm-l, .cat .arm-r {
+      position: absolute;
+      width: 22px;
+      height: 45px;
+      background: #f8bbd0;
+      border-radius: 40%;
+      bottom: 35px;
+    }
+    .cat .arm-l { left: -14px; transform: rotate(20deg); }
+    .cat .arm-r { right: -14px; transform: rotate(-20deg); }
+    .cat .paw-l, .cat .paw-r {
+      position: absolute;
+      width: 16px;
+      height: 12px;
+      background: #f48fb1;
+      border-radius: 50%;
+      bottom: -4px;
+    }
+    .cat .paw-l { left: 2px; }
+    .cat .paw-r { right: 2px; }
+    .cat .leg-l, .cat .leg-r {
+      position: absolute;
+      width: 26px;
+      height: 20px;
+      background: #f8bbd0;
+      border-radius: 50%;
+      bottom: -6px;
+    }
+    .cat .leg-l { left: 6px; }
+    .cat .leg-r { right: 6px; }
+    .cat .tail {
+      position: absolute;
+      bottom: 30px;
+      right: -25px;
+      width: 40px;
+      height: 50px;
+      border: 4px solid #f8bbd0;
+      border-left: none;
+      border-bottom: none;
+      border-radius: 0 30px 0 0;
+      animation: tailWag 2s ease-in-out infinite;
+    }
+    @keyframes tailWag {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(10deg); }
+    }
+    .cat .heart {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      animation: heartBeat 1.5s ease-in-out infinite;
+    }
+    .cat .heart-shape {
+      position: relative;
+      width: 24px;
+      height: 22px;
+    }
+    .cat .heart-shape::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 12px;
+      width: 12px;
+      height: 18px;
+      background: #ff1744;
+      border-radius: 12px 12px 0 0;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+      box-shadow: 0 0 12px rgba(255,23,68,0.8);
+    }
+    .cat .heart-shape::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 12px;
+      height: 18px;
+      background: #ff1744;
+      border-radius: 12px 12px 0 0;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+      box-shadow: 0 0 12px rgba(255,23,68,0.8);
+    }
+    @keyframes heartBeat {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      25% { transform: translateX(-50%) scale(1.2); }
+      50% { transform: translateX(-50%) scale(1); }
+      75% { transform: translateX(-50%) scale(1.15); }
+    }
+    @keyframes catBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Fireflies */
+    .firefly {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ffff00;
+      border-radius: 50%;
+      box-shadow: 0 0 10px 4px rgba(255,255,0,0.6), 0 0 20px 8px rgba(255,255,0,0.3);
+      animation: fireflyFloat 6s ease-in-out infinite, fireflyGlow 1.5s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes fireflyFloat {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(30px, -25px); }
+      50% { transform: translate(-25px, -50px); }
+      75% { transform: translate(40px, -15px); }
+      100% { transform: translate(0, 0); }
+    }
+    @keyframes fireflyGlow {
+      0% { opacity: 0.2; box-shadow: 0 0 6px 2px rgba(255,255,0,0.3); }
+      100% { opacity: 1; box-shadow: 0 0 15px 6px rgba(255,255,0,0.9), 0 0 30px 12px rgba(255,255,0,0.5); }
+    }
+
+    .click-hint {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.4);
+      font-family: monospace;
+      font-size: 13px;
+      pointer-events: none;
+      animation: hintFade 4s ease-in-out infinite alternate;
+    }
+    @keyframes hintFade {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sky"></div>
+  <div class="stars" id="stars"></div>
+  <div class="moon"></div>
+  <div class="flowers" id="flowers"></div>
+  <div class="ground"></div>
+  <div class="cat">
+    <div class="head">
+      <div class="ear-l"></div><div class="ear-r"></div>
+      <div class="eye-l"></div><div class="eye-r"></div>
+      <div class="nose"></div>
+      <div class="mouth"></div>
+      <div class="whisker-l1"></div><div class="whisker-l2"></div><div class="whisker-l3"></div>
+      <div class="whisker-r1"></div><div class="whisker-r2"></div><div class="whisker-r3"></div>
+    </div>
+    <div class="body"><div class="belly"></div></div>
+    <div class="arm-l"><div class="paw-l"></div></div>
+    <div class="arm-r"><div class="paw-r"></div></div>
+    <div class="leg-l"></div><div class="leg-r"></div>
+    <div class="tail"></div>
+    <div class="heart">
+      <div class="heart-shape"></div>
+    </div>
+  </div>
+  <div class="click-hint">click anywhere to spawn fireflies</div>
+
+  <script>
+    const W = () => window.innerWidth;
+    const H = () => window.innerHeight;
+
+    // Generate 200 stars
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 200; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() < 0.15 ? 3 : Math.random() < 0.4 ? 2 : 1;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 55 + '%';
+      s.style.animationDelay = (Math.random() * 3) + 's';
+      s.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      starsEl.appendChild(s);
+    }
+
+    // Generate 40 flowers
+    const flowersEl = document.getElementById('flowers');
+    const flowerColors = [
+      '#ff1744', '#ff9100', '#d500f9', '#ffea00', '#00e5ff',
+      '#ff6d00', '#e040fb', '#76ff03', '#ff4081', '#00e676',
+      '#ff3d00', '#7c4dff', '#ffab00', '#18ffff', '#f50057',
+      '#69f0ae', '#ff6e40', '#b388ff', '#ffd740', '#84ffff'
+    ];
+    for (let i = 0; i < 80; i++) {
+      const f = document.createElement('div');
+      f.className = 'flower';
+      const left = (i / 80) * 98 + Math.random() * 2;
+      f.style.left = left + '%';
+
+      const stemH = 40 + Math.random() * 45;
+      const bloomSize = 20 + Math.random() * 18;
+      const petalW = bloomSize * 0.4;
+      const petalH = bloomSize * 0.6;
+      const centerSize = bloomSize * 0.3;
+      const color = flowerColors[i % flowerColors.length];
+      const delay = (Math.random() * 3) + 's';
+
+      let petalsHTML = '';
+      for (let p = 0; p < 5; p++) {
+        const angle = (p / 5) * 360;
+        const rad = (angle * Math.PI) / 180;
+        const px = Math.cos(rad) * bloomSize * 0.35 - petalW / 2;
+        const py = Math.sin(rad) * bloomSize * 0.35 - petalH / 2;
+        petalsHTML += `<div class="petal" style="width:${petalW}px;height:${petalH}px;background:${color};box-shadow:0 0 10px ${color};left:${bloomSize/2 + px}px;top:${bloomSize/2 + py}px;transform:rotate(${angle}deg)"></div>`;
+      }
+
+      f.innerHTML = `
+        <div class="stem" style="height:${stemH}px;animation-delay:${delay}"></div>
+        <div class="bloom" style="width:${bloomSize}px;height:${bloomSize}px;bottom:${stemH - bloomSize * 0.3}px;animation-delay:${delay}">
+          ${petalsHTML}
+          <div class="center" style="width:${centerSize}px;height:${centerSize}px;top:${bloomSize/2 - centerSize/2}px;left:${bloomSize/2 - centerSize/2}px"></div>
+        </div>`;
+      flowersEl.appendChild(f);
+    }
+
+    // Static ambient fireflies
+    function createFirefly(x, y, isAmbient) {
+      const f = document.createElement('div');
+      f.className = 'firefly';
+      f.style.left = x + 'px';
+      f.style.top = y + 'px';
+      f.style.animationDuration = (4 + Math.random() * 5) + 's, ' + (1 + Math.random() * 1.5) + 's';
+      f.style.animationDelay = (Math.random() * 2) + 's';
+      document.body.appendChild(f);
+
+      if (isAmbient) return;
+
+      // Click-spawned fireflies fade out after a while
+      setTimeout(() => {
+        f.style.transition = 'opacity 2s';
+        f.style.opacity = '0';
+        setTimeout(() => f.remove(), 2000);
+      }, 5000 + Math.random() * 5000);
+    }
+
+    // Spawn 25 ambient fireflies
+    for (let i = 0; i < 25; i++) {
+      createFirefly(Math.random() * W(), H() * 0.2 + Math.random() * H() * 0.6, true);
+    }
+
+    // Click to spawn burst of fireflies
+    document.addEventListener('click', (e) => {
+      const count = 5 + Math.floor(Math.random() * 8);
+      for (let i = 0; i < count; i++) {
+        const ox = (Math.random() - 0.5) * 120;
+        const oy = (Math.random() - 0.5) * 120;
+        createFirefly(e.clientX + ox, e.clientY + oy, false);
+      }
+    });
+  </script>
+</body>
+</html>
