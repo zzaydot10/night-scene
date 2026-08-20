@@ -1,495 +1,731 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Night Scene - Pure CSS + Click</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #000;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-      cursor: crosshair;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gift For You</title>
+    <style>
+        :root {
+            --surface-0: #05070C;
+            --surface-1: #0A0D12;
+            --surface-2: #0F131C;
+            --surface-3: #161D2B;
+            --accent: #FFB5E8;
+            --accent-warm: #FF9CEE;
+            --text: #FFFFFF;
+            --bee-yellow: #FFD93D;
+            --bee-black: #1A1A1A;
+        }
 
-    .sky {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, #0a0a3e 0%, #1a0a4e 40%, #000 80%);
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Stars */
-    .stars { position: absolute; inset: 0; }
-    .star {
-      position: absolute;
-      background: #fff;
-      border-radius: 50%;
-      animation: twinkle 2s ease-in-out infinite alternate;
-    }
-    @keyframes twinkle {
-      0% { opacity: 0.2; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.4); }
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
 
-    /* Moon */
-    .moon {
-      position: absolute;
-      top: 10%;
-      right: 16%;
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      background: #fffde7;
-      box-shadow: 0 0 40px 15px rgba(255,253,200,0.4), 0 0 80px 30px rgba(255,253,200,0.2);
-      animation: moonGlow 4s ease-in-out infinite alternate;
-    }
-    .moon::after {
-      content: '';
-      position: absolute;
-      top: -10px;
-      left: 28px;
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      background: #0a0a3e;
-    }
-    @keyframes moonGlow {
-      0% { box-shadow: 0 0 40px 15px rgba(255,253,200,0.4), 0 0 80px 30px rgba(255,253,200,0.2); }
-      100% { box-shadow: 0 0 60px 25px rgba(255,253,200,0.6), 0 0 100px 40px rgba(255,253,200,0.3); }
-    }
+        .sunrise-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                #1a1042 0%,
+                #2d1b69 15%,
+                #5b3a9f 30%,
+                #d4667c 50%,
+                #f9a471 65%,
+                #ffd89b 80%,
+                #ffe9c5 100%
+            );
+            animation: sunrise 8s ease-in-out infinite alternate;
+        }
 
-    /* Ground */
-    .ground {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 22%;
-      background: linear-gradient(180deg, #0d2a0d 0%, #061206 100%);
-    }
+        @keyframes sunrise {
+            0% {
+                filter: brightness(0.6);
+            }
+            100% {
+                filter: brightness(1.2);
+            }
+        }
 
-    /* Flowers */
-    .flowers { position: absolute; bottom: 22%; width: 100%; }
-    .flower {
-      position: absolute;
-      bottom: 0;
-    }
-    .flower .stem {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 3px;
-      border-radius: 2px;
-      background: #2e7d32;
-      animation: sway 3s ease-in-out infinite;
-    }
-    .flower .bloom {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: bloomPop 2s ease-in-out infinite alternate;
-    }
-    .flower .petal {
-      position: absolute;
-      border-radius: 50%;
-    }
-    .flower .center {
-      position: absolute;
-      background: #ffeb3b;
-      border-radius: 50%;
-      z-index: 1;
-    }
-    @keyframes sway {
-      0%, 100% { transform: translateX(-50%) rotate(-4deg); }
-      50% { transform: translateX(-50%) rotate(4deg); }
-    }
-    @keyframes bloomPop {
-      0% { transform: translateX(-50%) scale(0.9); }
-      100% { transform: translateX(-50%) scale(1.15); }
-    }
+        .sun {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(100px, 15vw, 200px);
+            height: clamp(100px, 15vw, 200px);
+            background: radial-gradient(circle, #FFF5E1 0%, #FFD700 40%, #FF8C00 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px 30px rgba(255, 215, 0, 0.6);
+            animation: sunPulse 4s ease-in-out infinite;
+        }
 
-    /* Cat */
-    .cat {
-      position: absolute;
-      bottom: 22%;
-      left: 42%;
-      animation: catBounce 4s ease-in-out infinite;
-    }
-    .cat .head {
-      position: absolute;
-      bottom: 105px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 75px;
-      height: 65px;
-      background: #f8bbd0;
-      border-radius: 50% 50% 45% 45%;
-      box-shadow: 0 0 20px rgba(244,143,177,0.3);
-    }
-    .cat .ear-l, .cat .ear-r {
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-left: 14px solid transparent;
-      border-right: 14px solid transparent;
-      border-bottom: 28px solid #f8bbd0;
-      top: -22px;
-    }
-    .cat .ear-l { left: 0px; transform: rotate(-10deg); }
-    .cat .ear-r { right: 0px; transform: rotate(10deg); }
-    .cat .ear-l::after, .cat .ear-r::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-bottom: 18px solid #f48fb1;
-      top: 8px;
-      left: -8px;
-    }
-    .cat .eye-l, .cat .eye-r {
-      position: absolute;
-      width: 10px;
-      height: 12px;
-      background: #880e4f;
-      border-radius: 50%;
-      top: 22px;
-    }
-    .cat .eye-l { left: 14px; }
-    .cat .eye-r { right: 14px; }
-    .cat .eye-l::after, .cat .eye-r::after {
-      content: '';
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: #fff;
-      border-radius: 50%;
-      top: 2px;
-      left: 3px;
-    }
-    .cat .nose {
-      position: absolute;
-      top: 36px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 8px;
-      height: 6px;
-      background: #880e4f;
-      border-radius: 50% 50% 40% 40%;
-    }
-    .cat .mouth {
-      position: absolute;
-      top: 41px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20px;
-      height: 10px;
-    }
-    .cat .mouth::before, .cat .mouth::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      width: 10px;
-      height: 8px;
-      border-bottom: 2px solid #880e4f;
-      border-radius: 0 0 50% 50%;
-    }
-    .cat .mouth::before { left: 0; }
-    .cat .mouth::after { right: 0; }
-    .cat .whisker-l1, .cat .whisker-l2, .cat .whisker-l3,
-    .cat .whisker-r1, .cat .whisker-r2, .cat .whisker-r3 {
-      position: absolute;
-      width: 30px;
-      height: 2px;
-      background: #880e4f;
-      top: 38px;
-      border-radius: 1px;
-    }
-    .cat .whisker-l1 { left: -28px; transform: rotate(-5deg); }
-    .cat .whisker-l2 { left: -30px; top: 42px; transform: rotate(0deg); }
-    .cat .whisker-l3 { left: -28px; top: 46px; transform: rotate(5deg); }
-    .cat .whisker-r1 { right: -28px; transform: rotate(5deg); }
-    .cat .whisker-r2 { right: -30px; top: 42px; transform: rotate(0deg); }
-    .cat .whisker-r3 { right: -28px; top: 46px; transform: rotate(-5deg); }
-    .cat .body {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 65px;
-      height: 75px;
-      background: #f8bbd0;
-      border-radius: 50% 50% 45% 45%;
-      box-shadow: 0 0 20px rgba(244,143,177,0.3);
-    }
-    .cat .belly {
-      position: absolute;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 38px;
-      height: 38px;
-      background: #fce4ec;
-      border-radius: 50%;
-    }
-    .cat .arm-l, .cat .arm-r {
-      position: absolute;
-      width: 22px;
-      height: 45px;
-      background: #f8bbd0;
-      border-radius: 40%;
-      bottom: 35px;
-    }
-    .cat .arm-l { left: -14px; transform: rotate(20deg); }
-    .cat .arm-r { right: -14px; transform: rotate(-20deg); }
-    .cat .paw-l, .cat .paw-r {
-      position: absolute;
-      width: 16px;
-      height: 12px;
-      background: #f48fb1;
-      border-radius: 50%;
-      bottom: -4px;
-    }
-    .cat .paw-l { left: 2px; }
-    .cat .paw-r { right: 2px; }
-    .cat .leg-l, .cat .leg-r {
-      position: absolute;
-      width: 26px;
-      height: 20px;
-      background: #f8bbd0;
-      border-radius: 50%;
-      bottom: -6px;
-    }
-    .cat .leg-l { left: 6px; }
-    .cat .leg-r { right: 6px; }
-    .cat .tail {
-      position: absolute;
-      bottom: 30px;
-      right: -25px;
-      width: 40px;
-      height: 50px;
-      border: 4px solid #f8bbd0;
-      border-left: none;
-      border-bottom: none;
-      border-radius: 0 30px 0 0;
-      animation: tailWag 2s ease-in-out infinite;
-    }
-    @keyframes tailWag {
-      0%, 100% { transform: rotate(-5deg); }
-      50% { transform: rotate(10deg); }
-    }
-    .cat .heart {
-      position: absolute;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      animation: heartBeat 1.5s ease-in-out infinite;
-    }
-    .cat .heart-shape {
-      position: relative;
-      width: 24px;
-      height: 22px;
-    }
-    .cat .heart-shape::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 12px;
-      width: 12px;
-      height: 18px;
-      background: #ff1744;
-      border-radius: 12px 12px 0 0;
-      transform: rotate(-45deg);
-      transform-origin: 0 100%;
-      box-shadow: 0 0 12px rgba(255,23,68,0.8);
-    }
-    .cat .heart-shape::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 12px;
-      height: 18px;
-      background: #ff1744;
-      border-radius: 12px 12px 0 0;
-      transform: rotate(45deg);
-      transform-origin: 100% 100%;
-      box-shadow: 0 0 12px rgba(255,23,68,0.8);
-    }
-    @keyframes heartBeat {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      25% { transform: translateX(-50%) scale(1.2); }
-      50% { transform: translateX(-50%) scale(1); }
-      75% { transform: translateX(-50%) scale(1.15); }
-    }
-    @keyframes catBounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
+        @keyframes sunPulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+                box-shadow: 0 0 60px 30px rgba(255, 215, 0, 0.6);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+                box-shadow: 0 0 80px 40px rgba(255, 215, 0, 0.8);
+            }
+        }
 
-    /* Fireflies */
-    .firefly {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      background: #ffff00;
-      border-radius: 50%;
-      box-shadow: 0 0 10px 4px rgba(255,255,0,0.6), 0 0 20px 8px rgba(255,255,0,0.3);
-      animation: fireflyFloat 6s ease-in-out infinite, fireflyGlow 1.5s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-    @keyframes fireflyFloat {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(30px, -25px); }
-      50% { transform: translate(-25px, -50px); }
-      75% { transform: translate(40px, -15px); }
-      100% { transform: translate(0, 0); }
-    }
-    @keyframes fireflyGlow {
-      0% { opacity: 0.2; box-shadow: 0 0 6px 2px rgba(255,255,0,0.3); }
-      100% { opacity: 1; box-shadow: 0 0 15px 6px rgba(255,255,0,0.9), 0 0 30px 12px rgba(255,255,0,0.5); }
-    }
+        .message {
+            position: absolute;
+            top: clamp(60px, 15vh, 120px);
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+            animation: fadeIn 2s ease-in;
+        }
 
-    .click-hint {
-      position: fixed;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: rgba(255,255,255,0.4);
-      font-family: monospace;
-      font-size: 13px;
-      pointer-events: none;
-      animation: hintFade 4s ease-in-out infinite alternate;
-    }
-    @keyframes hintFade {
-      0% { opacity: 0.3; }
-      100% { opacity: 0.7; }
-    }
-  </style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .message h1 {
+            font-size: clamp(1.5rem, 5vw, 3.5rem);
+            color: var(--text);
+            text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.7),
+                         0 0 20px rgba(255, 181, 232, 0.8);
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .characters {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            z-index: 5;
+            animation: slideUp 2s ease-out 0.5s backwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                bottom: -200px;
+                opacity: 0;
+            }
+            to {
+                bottom: 0;
+                opacity: 1;
+            }
+        }
+
+        .character {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .hello-kitty, .spiderman {
+            width: clamp(100px, 20vw, 180px);
+            height: clamp(120px, 24vw, 220px);
+            position: relative;
+            animation: bounce 3s ease-in-out infinite;
+        }
+
+        .spiderman {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Hello Kitty */
+        .hello-kitty .head {
+            width: 80%;
+            height: 60%;
+            background: #fff;
+            border-radius: 50%;
+            position: relative;
+            left: 10%;
+            border: 3px solid #333;
+        }
+
+        .hello-kitty .ear {
+            width: 35%;
+            height: 35%;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 5%;
+            border: 3px solid #333;
+        }
+
+        .hello-kitty .ear.left {
+            left: 5%;
+        }
+
+        .hello-kitty .ear.right {
+            right: 5%;
+        }
+
+        .hello-kitty .bow {
+            width: 30%;
+            height: 20%;
+            background: #FF1493;
+            border-radius: 50%;
+            position: absolute;
+            top: 15%;
+            left: -5%;
+            border: 2px solid #C71585;
+        }
+
+        .hello-kitty .bow::after {
+            content: '';
+            width: 50%;
+            height: 50%;
+            background: #FF1493;
+            border-radius: 50%;
+            position: absolute;
+            right: -40%;
+            top: 25%;
+            border: 2px solid #C71585;
+        }
+
+        .hello-kitty .eye {
+            width: 10%;
+            height: 10%;
+            background: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 40%;
+        }
+
+        .hello-kitty .eye.left {
+            left: 30%;
+        }
+
+        .hello-kitty .eye.right {
+            right: 30%;
+        }
+
+        .hello-kitty .nose {
+            width: 15%;
+            height: 8%;
+            background: #FFD700;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: absolute;
+            top: 52%;
+            left: 42.5%;
+            border: 2px solid #333;
+        }
+
+        .hello-kitty .whiskers {
+            position: absolute;
+            width: 25%;
+            height: 2px;
+            background: #333;
+            top: 55%;
+        }
+
+        .hello-kitty .whiskers.left-top {
+            left: 5%;
+            transform: rotate(-10deg);
+        }
+
+        .hello-kitty .whiskers.left-bottom {
+            left: 5%;
+            top: 60%;
+            transform: rotate(10deg);
+        }
+
+        .hello-kitty .whiskers.right-top {
+            right: 5%;
+            transform: rotate(10deg);
+        }
+
+        .hello-kitty .whiskers.right-bottom {
+            right: 5%;
+            top: 60%;
+            transform: rotate(-10deg);
+        }
+
+        .hello-kitty .body {
+            width: 70%;
+            height: 40%;
+            background: #fff;
+            border-radius: 20px;
+            position: absolute;
+            bottom: 0;
+            left: 15%;
+            border: 3px solid #333;
+        }
+
+        /* Spiderman */
+        .spiderman .head {
+            width: 70%;
+            height: 50%;
+            background: #DC143C;
+            border-radius: 50%;
+            position: relative;
+            left: 15%;
+            border: 3px solid #8B0000;
+            overflow: hidden;
+        }
+
+        .spiderman .web-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 48%, #000 48%, #000 52%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, #000 48%, #000 52%, transparent 52%),
+                radial-gradient(circle at 50% 40%, transparent 20%, transparent 20%, transparent 40%, #000 40%, #000 41%, transparent 41%, transparent 60%, #000 60%, #000 61%, transparent 61%);
+        }
+
+        .spiderman .eye {
+            width: 35%;
+            height: 30%;
+            background: #fff;
+            position: absolute;
+            top: 35%;
+            clip-path: polygon(0% 50%, 20% 20%, 80% 0%, 100% 40%, 70% 100%, 30% 100%);
+            border: 2px solid #000;
+        }
+
+        .spiderman .eye.left {
+            left: 10%;
+        }
+
+        .spiderman .eye.right {
+            right: 10%;
+            transform: scaleX(-1);
+        }
+
+        .spiderman .body {
+            width: 65%;
+            height: 50%;
+            background: #DC143C;
+            border-radius: 20px;
+            position: absolute;
+            bottom: 0;
+            left: 17.5%;
+            border: 3px solid #8B0000;
+        }
+
+        .spiderman .spider-logo {
+            width: 40%;
+            height: 50%;
+            background: #000;
+            position: absolute;
+            top: 10%;
+            left: 30%;
+            clip-path: polygon(50% 0%, 70% 30%, 100% 30%, 80% 50%, 90% 80%, 50% 65%, 10% 80%, 20% 50%, 0% 30%, 30% 30%);
+        }
+
+        .holding-hands {
+            width: 60px;
+            height: 3px;
+            background: #FFB5E8;
+            position: absolute;
+            bottom: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(255, 181, 232, 0.8);
+        }
+
+        .flowers {
+            position: absolute;
+            bottom: 10px;
+            display: flex;
+            gap: 15px;
+            animation: flowersGrow 2s ease-out 1s backwards;
+        }
+
+        @keyframes flowersGrow {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .flower {
+            width: clamp(30px, 5vw, 50px);
+            height: clamp(30px, 5vw, 50px);
+            position: relative;
+            animation: flowerSway 3s ease-in-out infinite;
+        }
+
+        .flower:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .flower:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes flowerSway {
+            0%, 100% {
+                transform: rotate(-5deg);
+            }
+            50% {
+                transform: rotate(5deg);
+            }
+        }
+
+        .flower .petal {
+            width: 50%;
+            height: 50%;
+            background: var(--accent);
+            border-radius: 50%;
+            position: absolute;
+            top: 25%;
+            left: 25%;
+        }
+
+        .flower .petal:nth-child(1) {
+            transform: translateY(-50%);
+        }
+
+        .flower .petal:nth-child(2) {
+            transform: translateY(50%);
+        }
+
+        .flower .petal:nth-child(3) {
+            transform: translateX(-50%);
+        }
+
+        .flower .petal:nth-child(4) {
+            transform: translateX(50%);
+        }
+
+        .flower .center {
+            width: 40%;
+            height: 40%;
+            background: #FFD93D;
+            border-radius: 50%;
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            z-index: 1;
+        }
+
+        .flower .stem {
+            width: 3px;
+            height: 40px;
+            background: #2D5016;
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .flowers.left {
+            left: 15%;
+        }
+
+        .flowers.right {
+            right: 15%;
+        }
+
+        .bee {
+            position: absolute;
+            width: clamp(30px, 4vw, 50px);
+            height: clamp(25px, 3.5vw, 40px);
+            animation: fly 8s ease-in-out infinite;
+        }
+
+        .bee:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-duration: 7s;
+        }
+
+        .bee:nth-child(2) {
+            top: 40%;
+            right: 15%;
+            animation-duration: 9s;
+            animation-delay: 1s;
+        }
+
+        .bee:nth-child(3) {
+            top: 60%;
+            left: 20%;
+            animation-duration: 10s;
+            animation-delay: 2s;
+        }
+
+        @keyframes fly {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(30px, -20px) rotate(5deg);
+            }
+            50% {
+                transform: translate(60px, 10px) rotate(-5deg);
+            }
+            75% {
+                transform: translate(30px, 30px) rotate(3deg);
+            }
+        }
+
+        .bee .body-bee {
+            width: 100%;
+            height: 70%;
+            background: var(--bee-yellow);
+            border-radius: 999px;
+            position: relative;
+            border: 2px solid var(--bee-black);
+        }
+
+        .bee .stripe {
+            width: 25%;
+            height: 100%;
+            background: var(--bee-black);
+            position: absolute;
+            top: 0;
+        }
+
+        .bee .stripe:nth-child(1) {
+            left: 25%;
+        }
+
+        .bee .stripe:nth-child(2) {
+            left: 55%;
+        }
+
+        .bee .wing {
+            width: 45%;
+            height: 60%;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            animation: wingFlap 0.3s ease-in-out infinite;
+        }
+
+        @keyframes wingFlap {
+            0%, 100% {
+                transform: translateY(0) scaleY(1);
+            }
+            50% {
+                transform: translateY(-3px) scaleY(1.1);
+            }
+        }
+
+        .bee .wing.left {
+            left: 10%;
+        }
+
+        .bee .wing.right {
+            right: 10%;
+        }
+
+        .bee .head-bee {
+            width: 35%;
+            height: 35%;
+            background: var(--bee-black);
+            border-radius: 50%;
+            position: absolute;
+            top: 20%;
+            right: -15%;
+        }
+
+        .bee .antenna {
+            width: 2px;
+            height: 12px;
+            background: var(--bee-black);
+            position: absolute;
+            top: -10px;
+        }
+
+        .bee .antenna.left {
+            right: 10px;
+            transform: rotate(-20deg);
+        }
+
+        .bee .antenna.right {
+            right: 5px;
+            transform: rotate(20deg);
+        }
+
+        .bee .antenna::after {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: var(--bee-black);
+            border-radius: 50%;
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
 </head>
 <body>
-  <div class="sky"></div>
-  <div class="stars" id="stars"></div>
-  <div class="moon"></div>
-  <div class="flowers" id="flowers"></div>
-  <div class="ground"></div>
-  <div class="cat">
-    <div class="head">
-      <div class="ear-l"></div><div class="ear-r"></div>
-      <div class="eye-l"></div><div class="eye-r"></div>
-      <div class="nose"></div>
-      <div class="mouth"></div>
-      <div class="whisker-l1"></div><div class="whisker-l2"></div><div class="whisker-l3"></div>
-      <div class="whisker-r1"></div><div class="whisker-r2"></div><div class="whisker-r3"></div>
+    <div class="sunrise-bg"></div>
+    <div class="sun"></div>
+    
+    <div class="message">
+        <h1>I Hope You're Having<br>A Great Day!</h1>
     </div>
-    <div class="body"><div class="belly"></div></div>
-    <div class="arm-l"><div class="paw-l"></div></div>
-    <div class="arm-r"><div class="paw-r"></div></div>
-    <div class="leg-l"></div><div class="leg-r"></div>
-    <div class="tail"></div>
-    <div class="heart">
-      <div class="heart-shape"></div>
+
+    <div class="bee">
+        <div class="wing left"></div>
+        <div class="wing right"></div>
+        <div class="body-bee">
+            <div class="stripe"></div>
+            <div class="stripe"></div>
+        </div>
+        <div class="head-bee">
+            <div class="antenna left"></div>
+            <div class="antenna right"></div>
+        </div>
     </div>
-  </div>
-  <div class="click-hint">click anywhere to spawn fireflies</div>
 
-  <script>
-    const W = () => window.innerWidth;
-    const H = () => window.innerHeight;
+    <div class="bee">
+        <div class="wing left"></div>
+        <div class="wing right"></div>
+        <div class="body-bee">
+            <div class="stripe"></div>
+            <div class="stripe"></div>
+        </div>
+        <div class="head-bee">
+            <div class="antenna left"></div>
+            <div class="antenna right"></div>
+        </div>
+    </div>
 
-    // Generate 200 stars
-    const starsEl = document.getElementById('stars');
-    for (let i = 0; i < 200; i++) {
-      const s = document.createElement('div');
-      s.className = 'star';
-      const size = Math.random() < 0.15 ? 3 : Math.random() < 0.4 ? 2 : 1;
-      s.style.width = size + 'px';
-      s.style.height = size + 'px';
-      s.style.left = Math.random() * 100 + '%';
-      s.style.top = Math.random() * 55 + '%';
-      s.style.animationDelay = (Math.random() * 3) + 's';
-      s.style.animationDuration = (1.5 + Math.random() * 2) + 's';
-      starsEl.appendChild(s);
-    }
+    <div class="bee">
+        <div class="wing left"></div>
+        <div class="wing right"></div>
+        <div class="body-bee">
+            <div class="stripe"></div>
+            <div class="stripe"></div>
+        </div>
+        <div class="head-bee">
+            <div class="antenna left"></div>
+            <div class="antenna right"></div>
+        </div>
+    </div>
 
-    // Generate 40 flowers
-    const flowersEl = document.getElementById('flowers');
-    const flowerColors = [
-      '#ff1744', '#ff9100', '#d500f9', '#ffea00', '#00e5ff',
-      '#ff6d00', '#e040fb', '#76ff03', '#ff4081', '#00e676',
-      '#ff3d00', '#7c4dff', '#ffab00', '#18ffff', '#f50057',
-      '#69f0ae', '#ff6e40', '#b388ff', '#ffd740', '#84ffff'
-    ];
-    for (let i = 0; i < 80; i++) {
-      const f = document.createElement('div');
-      f.className = 'flower';
-      const left = (i / 80) * 98 + Math.random() * 2;
-      f.style.left = left + '%';
+    <div class="flowers left">
+        <div class="flower">
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem"></div>
+        </div>
+        <div class="flower">
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem"></div>
+        </div>
+        <div class="flower">
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem"></div>
+        </div>
+    </div>
 
-      const stemH = 40 + Math.random() * 45;
-      const bloomSize = 20 + Math.random() * 18;
-      const petalW = bloomSize * 0.4;
-      const petalH = bloomSize * 0.6;
-      const centerSize = bloomSize * 0.3;
-      const color = flowerColors[i % flowerColors.length];
-      const delay = (Math.random() * 3) + 's';
+    <div class="characters">
+        <div class="character">
+            <div class="hello-kitty">
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+                <div class="head">
+                    <div class="bow"></div>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="nose"></div>
+                    <div class="whiskers left-top"></div>
+                    <div class="whiskers left-bottom"></div>
+                    <div class="whiskers right-top"></div>
+                    <div class="whiskers right-bottom"></div>
+                </div>
+                <div class="body"></div>
+            </div>
+        </div>
 
-      let petalsHTML = '';
-      for (let p = 0; p < 5; p++) {
-        const angle = (p / 5) * 360;
-        const rad = (angle * Math.PI) / 180;
-        const px = Math.cos(rad) * bloomSize * 0.35 - petalW / 2;
-        const py = Math.sin(rad) * bloomSize * 0.35 - petalH / 2;
-        petalsHTML += `<div class="petal" style="width:${petalW}px;height:${petalH}px;background:${color};box-shadow:0 0 10px ${color};left:${bloomSize/2 + px}px;top:${bloomSize/2 + py}px;transform:rotate(${angle}deg)"></div>`;
-      }
+        <div class="holding-hands"></div>
 
-      f.innerHTML = `
-        <div class="stem" style="height:${stemH}px;animation-delay:${delay}"></div>
-        <div class="bloom" style="width:${bloomSize}px;height:${bloomSize}px;bottom:${stemH - bloomSize * 0.3}px;animation-delay:${delay}">
-          ${petalsHTML}
-          <div class="center" style="width:${centerSize}px;height:${centerSize}px;top:${bloomSize/2 - centerSize/2}px;left:${bloomSize/2 - centerSize/2}px"></div>
-        </div>`;
-      flowersEl.appendChild(f);
-    }
+        <div class="character">
+            <div class="spiderman">
+                <div class="head">
+                    <div class="web-pattern"></div>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                </div>
+                <div class="body">
+                    <div class="spider-logo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    // Static ambient fireflies
-    function createFirefly(x, y, isAmbient) {
-      const f = document.createElement('div');
-      f.className = 'firefly';
-      f.style.left = x + 'px';
-      f.style.top = y + 'px';
-      f.style.animationDuration = (4 + Math.random() * 5) + 's, ' + (1 + Math.random() * 1.5) + 's';
-      f.style.animationDelay = (Math.random() * 2) + 's';
-      document.body.appendChild(f);
-
-      if (isAmbient) return;
-
-      // Click-spawned fireflies fade out after a while
-      setTimeout(() => {
-        f.style.transition = 'opacity 2s';
-        f.style.opacity = '0';
-        setTimeout(() => f.remove(), 2000);
-      }, 5000 + Math.random() * 5000);
-    }
-
-    // Spawn 25 ambient fireflies
-    for (let i = 0; i < 25; i++) {
-      createFirefly(Math.random() * W(), H() * 0.2 + Math.random() * H() * 0.6, true);
-    }
-
-    // Click to spawn burst of fireflies
-    document.addEventListener('click', (e) => {
-      const count = 5 + Math.floor(Math.random() * 8);
-      for (let i = 0; i < count; i++) {
-        const ox = (Math.random() - 0.5) * 120;
-        const oy = (Math.random() - 0.5) * 120;
-        createFirefly(e.clientX + ox, e.clientY + oy, false);
-      }
-    });
-  </script>
+    <div class="flowers right">
+        <div class="flower">
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem"></div>
+        </div>
+        <div class="flower">
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem"></div>
+        </div>
+        <div class="flower">
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="petal"></div>
+            <div class="center"></div>
+            <div class="stem"></div>
+        </div>
+    </div>
 </body>
 </html>
